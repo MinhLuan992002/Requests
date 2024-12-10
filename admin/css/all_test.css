@@ -1,0 +1,151 @@
+
+h2 {
+    text-align: center;
+    color: white;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #f9f9f9;
+    border-collapse: collapse;
+    border: 1px solid #dee2e6;
+}
+
+.table th,
+.table td {
+    padding: 7px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #007BFF;
+    color: white;
+    text-transform: uppercase;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #e9f5ff;
+}
+
+.text-success {
+    color: green;
+}
+
+.text-danger {
+    color: red;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.search-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    /* Giảm padding */
+    /* background-color: #f0f4f7; */
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    margin-right: 60px;
+}
+
+#search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Khoảng cách nhỏ hơn giữa các input */
+}
+
+#search-form input[type="text"] {
+    padding: 5.5px 8px;
+    /* Giảm kích thước padding */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* Giảm bo tròn */
+    font-size: 12px;
+    /* Giảm kích thước font */
+    width: 80px;
+    /* Giảm kích thước ô input */
+    transition: all 0.3s ease;
+
+}
+
+#search-form input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+#search-form input::placeholder {
+    color: #888;
+    font-size: 12px;
+    /* Kích thước font placeholder nhỏ hơn */
+}
+
+#search-form input[type="hidden"] {
+    display: none;
+}
+
+#search-form input[type="text"]:hover {
+    border-color: #007bff;
+}
+
+@media (max-width: 768px) {
+    #search-form {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+
+
+.btn-export {
+    float: right;
+    margin-bottom: 10px;
+    background-color: #28a745;
+    /* Màu xanh cho nút */
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    /* Giảm kích thước padding */
+    font-size: 12px;
+    /* Kích thước font nhỏ */
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-export i {
+    font-size: 14px;
+    /* Điều chỉnh kích thước icon */
+}
+
+.btn-export:hover {
+    background-color: #218838;
+    /* Màu tối hơn khi hover */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.btn-export:active {
+    background-color: #1e7e34;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+

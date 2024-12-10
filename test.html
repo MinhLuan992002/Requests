@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tùy chỉnh Choose File</title>
+    <style>
+        /* Ẩn input mặc định */
+        .custom-file-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* Tạo nút tùy chỉnh */
+        .custom-file-label {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .custom-file-label:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        <!-- Input file ẩn -->
+        <input type="file" id="fileInput" class="custom-file-input" name="file">
+
+        <!-- Nút tùy chỉnh -->
+        <label for="fileInput" class="custom-file-label">Chọn tệp</label>
+    </form>
+</body>
+</html>
