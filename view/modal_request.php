@@ -90,23 +90,21 @@
     class="modal fade"
     id="supportModal"
     tabindex="-1"
-    aria-hidden="true" data-bs-backdrop="true" data-bs-keyboard="true">
+    aria-hidden="true" data-bs-backdrop="false" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl"> <!-- Đổi modal-lg thành modal-xl -->
         <div class="modal-content">
             <div>
                 <div
                     class="card-header text-center bg-gradient-primary text-white ">
+                    <button type="button" style="float: right; border: none;  " class="modal-header btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <h3 style="color: white;" class=" mb-0 "><?= $translations['submit_request'] ?></h3>
                     <small id="requestTime" class="d-block mt-1">
                         <?= $translations['request_time'] ?> <strong id="currentTime"></strong>
                     </small>
+
                 </div>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+              
             </div>
             <div>
                 <!-- Nội dung form không đổi -->
@@ -252,13 +250,14 @@
                                                                     <div class="col-md-3 mb-3">
                                                                         <label for="category" class="form-label"><?= $translations['support_category'] ?></label>
                                                                         <select class="form-select" name="category[]" required onchange="updateSupportFields(this)">
-    <option value="" selected><?= $translations['support_category'] ?? 'Danh mục hỗ trợ' ?></option>
-    <?php foreach ($categories as &$category): ?>
-        <option value="<?= htmlspecialchars($category['id']) . '. ' . $category['category_name'] ?>">
-            <?= htmlspecialchars($category['category_name']) ?>
-        </option>
-    <?php endforeach; ?>
-</select>
+                                                                            <option value="" selected><?= $translations['support_category'] ?? 'Danh mục hỗ trợ' ?></option>
+                                                                            <?php foreach ($categories as &$category): ?>
+                                                                                <option value="<?= htmlspecialchars($category['category_name']) ?>">
+                                                                                    <?= htmlspecialchars($category['category_name']) ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+
+                                                                        </select>
 
 
 
@@ -329,50 +328,59 @@
 
                                                                 // Hàm cập nhật nội dung hỗ trợ dựa trên danh mục
                                                                 function updateSupportFields(selectElement) {
-                                                                    const categoryId = selectElement.value;
+                                                                    const categoryName = selectElement.value; // Lấy giá trị category_name từ <option>
                                                                     const supportContent = selectElement.closest('.request-row').querySelector('.support-content');
 
-                                                                    if (!categoryId) {
+                                                                    // Kiểm tra nếu chưa chọn danh mục
+                                                                    if (!categoryName) {
                                                                         supportContent.innerHTML = `<p class="text-muted"><?= $translations['please_select_category'] ?></p>`;
                                                                         return;
                                                                     }
 
-                                                                    fetch(`get_category_details.php?category_id=${categoryId}`)
+                                                                    // Gửi request đến server để lấy chi tiết danh mục
+                                                                    fetch(`get_category_details.php?category_name=${encodeURIComponent(categoryName)}`)
                                                                         .then(response => response.json())
                                                                         .then(data => {
+                                                                            // Kiểm tra lỗi từ phản hồi
                                                                             if (data.error) {
                                                                                 supportContent.innerHTML = `<p class="text-danger">Lỗi: ${data.error}</p>`;
                                                                                 return;
                                                                             }
 
+                                                                            // Tạo nội dung hiển thị dựa trên loại trường (field_type)
                                                                             let content = '';
                                                                             switch (data.field_type) {
                                                                                 case 'textarea':
                                                                                     content = `
-                            <textarea class="form-control" name="content[]" rows="4" placeholder="<?= $translations['enter_content_details'] ?>" required></textarea>
-                        `;
+                        <textarea class="form-control" name="content[]" rows="4" 
+                                  placeholder="${data.placeholder || 'Nhập nội dung chi tiết'}" required></textarea>
+                    `;
                                                                                     break;
                                                                                 case 'input':
                                                                                     content = `
-                            <input type="text" class="form-control" name="content[]" placeholder="<?= $translations['enter_content_details'] ?>" required />
-                        `;
+                        <input type="text" class="form-control" name="content[]" 
+                               placeholder="${data.placeholder || 'Nhập nội dung chi tiết'}" required />
+                    `;
                                                                                     break;
                                                                                 case 'select':
+                                                                                    const optionsArray = data.options ? data.options.split(',') : []; // Chuyển chuỗi options thành mảng
                                                                                     content = `
-                            <select class="form-select" name="content[]" required>
-                                ${data.options.map(option => `<option value="${option}">${option}</option>`).join('')}
-                            </select>
-                        `;
+                        <select class="form-select" name="content[]" required>
+                            ${optionsArray.map(option => `<option value="${option}">${option}</option>`).join('')}
+                        </select>
+                    `;
                                                                                     break;
                                                                                 default:
                                                                                     content = `<p class="text-muted">Không có nội dung hỗ trợ cho danh mục này.</p>`;
                                                                             }
 
+                                                                            // Cập nhật nội dung
                                                                             supportContent.innerHTML = content;
                                                                         })
                                                                         .catch(error => {
+                                                                            // Xử lý lỗi khi fetch dữ liệu
                                                                             supportContent.innerHTML = `<p class="text-danger">Lỗi khi tải nội dung hỗ trợ.</p>`;
-                                                                            console.error(error);
+                                                                            console.error('Fetch Error:', error);
                                                                         });
                                                                 }
                                                             </script>

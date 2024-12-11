@@ -43,7 +43,7 @@ try {
     'manv' =>  $_SESSION['manv']
   ]);
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
-$lang= 'ja';
+
  
 
   $stmt = $pdo->query("SELECT level_value, level_name FROM priority_levels WHERE isDeleted = 0 AND isActive = 1 ORDER BY level_value ASC");
@@ -426,7 +426,7 @@ $pdo = null;
             document.getElementById('email').value = data.email;
           } else {
             document.getElementById('dept').value = '';
-            document.getElementById('email').value = '';
+            document.getElementById('').value = '';
           }
         })
         .catch((error) => console.error('Error fetching employee info:', error));

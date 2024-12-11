@@ -47,10 +47,6 @@ $lang = $result['language_code'] ?? 'en'; // Nếu không có, mặc định là
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thông tin cá nhân</title>
-  <link rel="stylesheet" href="./css/nucleo-icons.css">
-  <link rel="stylesheet" href="./css/nucleo-svg.css">
-  <link id="pagestyle" href=" css/soft-design-system.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./fontawesome/css/all.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -152,7 +148,7 @@ $lang = $result['language_code'] ?? 'en'; // Nếu không có, mặc định là
             <!-- Email -->
             <div class="mb-3">
               <label for="email" class="form-label"><?= $translations['email'] ?></label>
-              <input type="email" class="form-control" id="email" value="<?= htmlspecialchars($_SESSION['mail']); ?>" readonly>
+              <input type="email" class="form-control" id="email1" value="<?= htmlspecialchars($_SESSION['mail']); ?>" readonly>
             </div>
 
             <!-- Department -->
