@@ -251,14 +251,14 @@ if (isset($_GET['request_id'])) {
                                     <?php
                                     $approval_status = $request['approval_status'] ?? ''; // Lấy trạng thái phê duyệt từ cơ sở dữ liệu
 
-                                    if ($approval_status !== 'Completed'): ?>
+                                    if ($approval_status == 'Final Approved'): ?>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary mt-3">
                                                 <?= $translations['complete'] ?>
                                             </button>
                                         </div>
                                     <?php else: ?>
-                                        <p class="text-center text-success"><?= $translations['request_processed'] ?></p>
+                                        <!-- <p class="text-center text-success"><?= $translations['request_processed'] ?></p> -->
                                     <?php endif; ?>
 
                                     <!-- Input ẩn để lưu trạng thái approval_status -->
