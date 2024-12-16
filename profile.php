@@ -1,13 +1,9 @@
-
-<?php 
-
-require_once './lib/Database.php';
-?>
-
 <?php
 
+require_once './lib/Database.php';
 
-
+?>
+<?php
 // Tạo đối tượng Database
 $db = new Database();
 
@@ -15,19 +11,19 @@ $db = new Database();
 $userId = $_SESSION['manv'] ?? null;
 
 if ($userId) {
-    // Truy vấn để lấy đường dẫn ảnh đại diện
-    $query = "SELECT * FROM users WHERE manv = :id";
-    $params = [':id' => $userId];
-    $result = $db->fetch($query, $params);
+  // Truy vấn để lấy đường dẫn ảnh đại diện
+  $query = "SELECT * FROM users WHERE manv = :id";
+  $params = [':id' => $userId];
+  $result = $db->fetch($query, $params);
 
-    // Kiểm tra nếu có kết quả
-    if ($result && isset($result['avatar'])) {
-        $avatarPath = $result['avatar']; // Lấy đường dẫn ảnh từ DB
-    } else {
-        $avatarPath = 'uploads/avatars/default-avatar.png'; // Đường dẫn ảnh mặc định
-    }
+  // Kiểm tra nếu có kết quả
+  if ($result && isset($result['avatar'])) {
+    $avatarPath = $result['avatar']; // Lấy đường dẫn ảnh từ DB
+  } else {
+    $avatarPath = 'uploads/avatars/default-avatar.png'; // Đường dẫn ảnh mặc định
+  }
 } else {
-    die("Không tìm thấy người dùng.");
+  die("Không tìm thấy người dùng.");
 }
 
 
@@ -94,15 +90,13 @@ $lang = $result['language_code'] ?? 'en'; // Nếu không có, mặc định là
     }
 
     .dropdown-menu {
-      border: 1px solid #ff6f00;
+      border: 1px solid while;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .dropdown-item img {
       margin-right: 5px;
     }
-
-
   </style>
 </head>
 
@@ -121,16 +115,16 @@ $lang = $result['language_code'] ?? 'en'; // Nếu không có, mặc định là
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form id="profileForm" method="POST" action="save_profile.php" enctype="multipart/form-data">
-          <div class="text-center">
-        <div class="avatar-wrapper">
-        <img src="<?php echo $avatarPath; ?>" alt="Avatar" id="avatarPreview" class="avatar">
-            <label for="avatarUpload" class="upload-icon">
-                <i class="fa fa-camera"></i>
-            </label>
-            <input type="file" id="avatarUpload" name="avatar" style="display: none;" accept="image/*">
-        </div>
-    </div>
+          <form id="profileForm" method="POST" action="save_profile.php" enctype="multipart/form-data">
+            <div class="text-center">
+              <div class="avatar-wrapper">
+                <img src="<?php echo $avatarPath; ?>" alt="Avatar" id="avatarPreview" class="avatar">
+                <label for="avatarUpload" class="upload-icon">
+                  <i class="fa fa-camera"></i>
+                </label>
+                <input type="file" id="avatarUpload" name="avatar" style="display: none;" accept="image/*">
+              </div>
+            </div>
 
 
             <!-- Full Name -->
@@ -159,25 +153,25 @@ $lang = $result['language_code'] ?? 'en'; // Nếu không có, mặc định là
 
             <!-- Language Selection -->
             <div class="mb-3">
-        <label for="language" class="form-label">Chọn ngôn ngữ mặc định:</label>
-        <input type="hidden" name="language" id="hiddenLanguageInput" value="<?= $lang; ?>">
-        <div class="dropdown">
-    <button class="btn btn-outline-primary btn-sm" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <img id="currentFlag" src="img/<?= $lang === 'en' ? 'US' : ($lang === 'vi' ? 'VN' : 'JP'); ?>.png" alt="Flag" style="width: 20px; height: 15px;">
-        <span id="currentLanguage"><?= $lang === 'en' ? 'English (US)' : ($lang === 'vi' ? 'Việt Nam (VI)' : '日本語 (JP)'); ?></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-        <li><a class="dropdown-item" data-lang="en" data-flag="US.png" data-text="English (US)"><img src="img/US.png" alt="US Flag" style="width: 20px; height: 15px;"> English (US)</a></li>
-        <li><a class="dropdown-item" data-lang="jp" data-flag="JP.png" data-text="日本語 (JP)"><img src="img/JP.png" alt="JP Flag" style="width: 20px; height: 15px;"> 日本語 (JP)</a></li>
-        <li><a class="dropdown-item" data-lang="vi" data-flag="VN.png" data-text="Việt Nam (VI)"><img src="img/VN.png" alt="VN Flag" style="width: 20px; height: 15px;"> Việt Nam (VI)</a></li>
-    </ul>
-</div>
+              <label for="language" class="form-label">Chọn ngôn ngữ mặc định:</label>
+              <input type="hidden" name="language" id="hiddenLanguageInput" value="<?= $lang; ?>">
+              <div class="dropdown">
+                <button class="btn btn-outline-primary btn-sm" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img id="currentFlag" src="img/<?= $lang === 'en' ? 'US' : ($lang === 'vi' ? 'VN' : 'JP'); ?>.png" alt="Flag" style="width: 20px; height: 15px;">
+                  <span id="currentLanguage"><?= $lang === 'en' ? 'English (US)' : ($lang === 'vi' ? 'Việt Nam (VI)' : '日本語 (JP)'); ?></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                  <li><a class="dropdown-item" data-lang="en" data-flag="US.png" data-text="English (US)"><img src="img/US.png" alt="US Flag" style="width: 20px; height: 15px;"> English (US)</a></li>
+                  <li><a class="dropdown-item" data-lang="jp" data-flag="JP.png" data-text="日本語 (JP)"><img src="img/JP.png" alt="JP Flag" style="width: 20px; height: 15px;"> 日本語 (JP)</a></li>
+                  <li><a class="dropdown-item" data-lang="vi" data-flag="VN.png" data-text="Việt Nam (VI)"><img src="img/VN.png" alt="VN Flag" style="width: 20px; height: 15px;"> Việt Nam (VI)</a></li>
+                </ul>
+              </div>
 
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-    </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
 
 
 

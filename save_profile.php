@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'notifications/notifications.php';
 include 'config/config.php';
 require_once './lib/Database.php';
 // Kiểm tra nếu form được gửi qua POST
@@ -44,7 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $db->execute($query, $params);
 
     if ($result) {
-        echo "Cập nhật thành công!";
+        echo('.');
+        echo "<script>
+                showSuccessNotification('Yêu cầu đã được thực hiện thành công!');
+              </script>";
     } else {
         echo "Cập nhật thất bại.";
     }

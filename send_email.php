@@ -1,7 +1,8 @@
-<?php 
+<?php
 include './notifications/notifications.php';
-include 'config/config.php'; 
+include 'config/config.php';
 include 'set_language.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -21,8 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category = $_POST['category'];  // Đảm bảo biến này được gán đúng
     $content = $_POST['content']; // Nội dung hỗ trợ
 
-    $desired_time = !empty($_POST['desired_time']) ? $_POST['desired_time'] : null;
-    ; // Nội dung hỗ trợ
+    $desired_time = !empty($_POST['desired_time']) ? $_POST['desired_time'] : null;; // Nội dung hỗ trợ
     date_default_timezone_set('Asia/Ho_Chi_Minh');
     $timestamp = date("Y-m-d H:i:s");
     $department = $_POST['department'];
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Kiểm tra loại tệp (chấp nhận hình ảnh và tệp Excel)
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-        
+
         if (in_array($fileType, $allowedTypes)) {
             // Di chuyển tệp vào thư mục đích
             if (move_uploaded_file($fileTmpPath, $destination)) {
@@ -59,53 +59,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Thu thập dữ liệu từ form
-$displayName = $_POST['displayName'];
-$manv = $_POST['manv'];
-$email = $_POST['mail'];
-// Người áp dụng
-$userId = $_POST['userId'];
-$userEmail = $_POST['userEmail'];
-$dept = $_POST['dept'];
-$priorityLevel = $_POST['priority_level'];
-$category = $_POST['category'];  // Mảng danh mục
-$content = $_POST['content'];    // Mảng nội dung hỗ trợ
+        // Thu thập dữ liệu từ form
+        $displayName = $_POST['displayName'];
+        $manv = $_POST['manv'];
+        $email = $_POST['mail'];
+        // Người áp dụng
+        $userId = $_POST['userId'];
+        $userEmail = $_POST['userEmail'];
+        $dept = $_POST['dept'];
+        $priorityLevel = $_POST['priority_level'];
+        $category = $_POST['category'];  // Mảng danh mục
+        $content = $_POST['content'];    // Mảng nội dung hỗ trợ
 
-date_default_timezone_set('Asia/Ho_Chi_Minh');
-$timestamp = date("Y-m-d H:i:s");
-// Kiểm tra và xử lý tệp đính kèm
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $timestamp = date("Y-m-d H:i:s");
+        // Kiểm tra và xử lý tệp đính kèm
 
-// Chuyển mảng `category` và `content` thành chuỗi JSON
-// $categoryJson = json_encode($category);  // Mảng danh mục thành chuỗi JSON
-// $contentJson = json_encode($content);    // Mảng nội dung thành chuỗi JSON
-$categoryJson = json_encode($category, JSON_UNESCAPED_UNICODE);
-$contentJson = json_encode($content, JSON_UNESCAPED_UNICODE);
+        // Chuyển mảng `category` và `content` thành chuỗi JSON
+        // $categoryJson = json_encode($category);  // Mảng danh mục thành chuỗi JSON
+        // $contentJson = json_encode($content);    // Mảng nội dung thành chuỗi JSON
+        $categoryJson = json_encode($category, JSON_UNESCAPED_UNICODE);
+        $contentJson = json_encode($content, JSON_UNESCAPED_UNICODE);
 
-// Chèn dữ liệu vào bảng yêu cầu hỗ trợ
-$stmt = $pdo->prepare("INSERT INTO support_requests (manv, priority_level, category, content, sender_name, userId, dept, userEmail, desired_time, attachment) 
+        // Chèn dữ liệu vào bảng yêu cầu hỗ trợ
+        $stmt = $pdo->prepare("INSERT INTO support_requests (manv, priority_level, category, content, sender_name, userId, dept, userEmail, desired_time, attachment) 
 VALUES (:manv, :priority_level, :category, :content, :sender_name, :userId, :dept, :userEmail, :desired_time, :attachment)");
 
-// Thực thi câu lệnh với dữ liệu được gán vào các tham số
-$stmt->execute([
-    ':manv' => $manv,               // Mã nhân viên
-    ':priority_level' => $priorityLevel, // Cấp độ ưu tiên
-    ':category' => $categoryJson,   // Lưu mảng danh mục dưới dạng JSON
-    ':content' => $contentJson,     // Lưu mảng nội dung dưới dạng JSON
-    ':sender_name' => $displayName, // Tên người gửi
-    ':userId' => $userId,
-    ':dept' => $dept,
-    ':userEmail' => $userEmail,    // Lưu đúng email người dùng
-    ':desired_time' => $desired_time,
-    ':attachment' => $attachmentPath, // Lưu đường dẫn tệp vào cơ sở dữ liệu
-]);
+        // Thực thi câu lệnh với dữ liệu được gán vào các tham số
+        $stmt->execute([
+            ':manv' => $manv,               // Mã nhân viên
+            ':priority_level' => $priorityLevel, // Cấp độ ưu tiên
+            ':category' => $categoryJson,   // Lưu mảng danh mục dưới dạng JSON
+            ':content' => $contentJson,     // Lưu mảng nội dung dưới dạng JSON
+            ':sender_name' => $displayName, // Tên người gửi
+            ':userId' => $userId,
+            ':dept' => $dept,
+            ':userEmail' => $userEmail,    // Lưu đúng email người dùng
+            ':desired_time' => $desired_time,
+            ':attachment' => $attachmentPath, // Lưu đường dẫn tệp vào cơ sở dữ liệu
+        ]);
 
-// Lấy ID yêu cầu vừa chèn
-$request_id = $pdo->lastInsertId();
+        // Lấy ID yêu cầu vừa chèn
+        $request_id = $pdo->lastInsertId();
 
 
         // Tạo link phê duyệt
         $approvalLink = "http://192.168.16.251:8009/requests/approve_request.php?request_id=" . urlencode($request_id);
-        
+
         // echo "Yêu cầu hỗ trợ đã được gửi thành công!";
     } catch (PDOException $e) {
         echo "Lỗi cơ sở dữ liệu: {$e->getMessage()}";
@@ -164,12 +164,12 @@ $request_id = $pdo->lastInsertId();
 
         // Người gửi và người nhận
         $mail->setFrom('it_support@vnmatsuya.com', 'Hệ Thống Hỗ Trợ');
-        
+
         // Tiêu đề email
         $mail->isHTML(true);
-        $mail->Subject = '[' . htmlspecialchars($priorityLevel) . '] Yêu cầu hỗ trợ về: ' . 
-        (is_array($content) ? htmlspecialchars(implode(', ', $content)) : htmlspecialchars($content));
-    
+        $mail->Subject = '[' . htmlspecialchars($priorityLevel) . '] Yêu cầu hỗ trợ về: ' .
+            (is_array($content) ? htmlspecialchars(implode(', ', $content)) : htmlspecialchars($content));
+
 
         // Nội dung email
         $mail->Body = '
@@ -178,7 +178,7 @@ $request_id = $pdo->lastInsertId();
 <p>Thank you.</p>
 
 <div style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 800px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h2 style="color: #007bff; text-align: center; margin-bottom: 20px;">'. $translations['submit_request'].'</h2>
+    <h2 style="color: #007bff; text-align: center; margin-bottom: 20px;">' . $translations['submit_request'] . '</h2>
 
     <!-- Thông tin người thực hiện -->
     <div style="margin-bottom: 30px;">
@@ -189,7 +189,7 @@ $request_id = $pdo->lastInsertId();
                 <td style="padding: 10px;">' . htmlspecialchars($manv) . '</td>
             </tr>
             <tr>
-                <td style="padding: 10px; background-color: #ffffff; font-weight: bold;">'. $translations['full_name'] .'</td>
+                <td style="padding: 10px; background-color: #ffffff; font-weight: bold;">' . $translations['full_name'] . '</td>
                 <td style="padding: 10px;">' . htmlspecialchars($displayName) . '</td>
             </tr>
             <tr>
@@ -216,7 +216,7 @@ $request_id = $pdo->lastInsertId();
                 <td style="padding: 10px;">' . htmlspecialchars($dept) . '</td>
             </tr>
             <tr>
-                <td style="padding: 10px; background-color: #f7f7f7; font-weight: bold;">'. $translations['email'] . '</td>
+                <td style="padding: 10px; background-color: #f7f7f7; font-weight: bold;">' . $translations['email'] . '</td>
                 <td style="padding: 10px;">' . htmlspecialchars($userEmail) . '</td>
             </tr>
         </table>
@@ -261,18 +261,17 @@ $request_id = $pdo->lastInsertId();
 </div>
 
     ';
-    // Gửi email
-    if ($attachmentPath) {
-        echo($attachmentPath);
-        $mail->addAttachment($attachmentPath); // Đính kèm tệp từ đường dẫn
-    }
-    $mail->send();
-    echo('.');
-    echo "<script>
+        // Gửi email
+        if ($attachmentPath) {
+            echo ($attachmentPath);
+            $mail->addAttachment($attachmentPath); // Đính kèm tệp từ đường dẫn
+        }
+        $mail->send();
+        echo ('.');
+        echo "<script>
             showSuccessNotification('Yêu cầu hỗ trợ đã được gửi thành công!');
         </script>";
     } catch (Exception $e) {
         echo "Không thể gửi email. Lỗi: {$mail->ErrorInfo}";
     }
 }
-?>

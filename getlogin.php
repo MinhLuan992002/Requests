@@ -87,7 +87,7 @@ if ($ldap_conn) {
                             $lang = 'en'; // Ngôn ngữ mặc định
                         }
                         
-                        header("Location: approval_list.php?lang=" . $lang);
+                        header("Location: approval_list.php");
                         exit;
                     } else {
                         echo "<script>

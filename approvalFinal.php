@@ -396,7 +396,6 @@ if (isset($_POST['request_id'])) {
         }
     }
 </style>
-
             ';
             sendEmail($userEmail, $subject, $body, $mail);
         }

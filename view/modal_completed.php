@@ -212,13 +212,13 @@ if (isset($_GET['request_id'])) {
                                         <div class="col-md-12">
                                             <label for="content" class="form-label"><?= $translations['manager_note'] ?></label>
 
-                                            <textarea name="note" class="form-control mb-2" rows="2" readonly><?= htmlspecialchars($request['notes_manager']) ?></textarea>
+                                            <textarea name="note" class="form-control mb-2" rows="2" readonly><?= htmlspecialchars($request['notes_manager'] ?? '') ?></textarea>
 
                                         </div>
                                         <div class="col-md-12">
                                             <label for="content" class="form-label"><?= $translations['final_approver_note'] ?></label>
 
-                                            <textarea name="note" class="form-control mb-2" rows="2" readonly><?= htmlspecialchars($request['notes_final']) ?></textarea>
+                                            <textarea name="note" class="form-control mb-2" rows="2" readonly><?= htmlspecialchars($request['notes_final'] ?? '') ?></textarea>
 
                                         </div>
                                         <div class="col-md-12 mb-3">
@@ -292,7 +292,6 @@ if (isset($_GET['request_id'])) {
         const modalElement = document.querySelector('#supportModal_Completed_<?= $request['id'] ?>');
         const modal = new bootstrap.Modal(modalElement);
 
-        // Lắng nghe sự kiện click vào backdrop và đóng modal nếu click vào ngoài modal
         modalElement.addEventListener('click', function(event) {
             if (event.target === modalElement) {
                 modal.hide(); // Đóng modal nếu nhấn vào backdrop

@@ -1,4 +1,4 @@
-<footer class="footer pt-5 mt-5">
+<!-- <footer class="footer pt-5 mt-5">
                 <hr class="horizontal dark mb-5">
                 <div class="container">
                     <div class=" row">
@@ -10,30 +10,26 @@
                                 <h6 class="mt-3 mb-2 opacity-8">Social</h6>
                                 <ul class="d-flex flex-row ms-n3 nav">
                                     <li class="nav-item">
-                                        <a class="nav-link pe-1" href="https://www.facebook.com/CreativeTim/" target="_blank">
-                                            <i class="fab fa-facebook text-lg opacity-8"></i>
+                                        <a class="nav-link pe-1" href="#" target="_blank">
+                                            <i class="fas fa-paper-plane text-lg opacity-8"></i>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link pe-1" href="https://twitter.com/creativetim" target="_blank">
-                                            <i class="fab fa-twitter text-lg opacity-8"></i>
+                                        <a class="nav-link pe-1" href="http://192.168.100.9/issue/" target="_blank">
+                                            <i class="fas fa-exclamation-circle text-lg opacity-8"></i>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link pe-1" href="https://dribbble.com/creativetim" target="_blank">
-                                            <i class="fab fa-dribbble text-lg opacity-8"></i>
+                                        <a class="nav-link pe-1" href="#" target="_blank">
+                                            <i class="fas fa-chalkboard-teacher text-lg opacity-8"></i>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link pe-1" href="https://github.com/creativetimofficial" target="_blank">
-                                            <i class="fab fa-github text-lg opacity-8"></i>
+                                        <a class="nav-link pe-1" href="http://192.168.100.9/" target="_blank">
+                                            <i class="fas fa-graduation-cap text-lg opacity-8"></i>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link pe-1" href="https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w" target="_blank">
-                                            <i class="fab fa-youtube text-lg opacity-8"></i>
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -42,25 +38,17 @@
                                 <h6 class="text-gradient text-primary text-sm">Company</h6>
                                 <ul class="flex-column ms-n3 nav">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/presentation" target="_blank">
-                                            About Us
+                                        <a class="nav-link" href="#" target="_blank">
+                                            Matsuya R&D Việt Nam
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/templates/free" target="_blank">
-                                            Freebies
+                                        <a class="nav-link" href="#" target="_blank">
+                                            Mã số thuế: 3601000200
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/templates/premium" target="_blank">
-                                            Premium Tools
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/blog" target="_blank">
-                                            Blog
-                                        </a>
-                                    </li>
+
+
                                 </ul>
                             </div>
                         </div>
@@ -91,25 +79,21 @@
                                 <h6 class="text-gradient text-primary text-sm">Help &amp; Support</h6>
                                 <ul class="flex-column ms-n3 nav">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/contact-us" target="_blank">
-                                            Contact Us
+                                        <a class="nav-link" href="#" target="_blank">
+                                        Request Forms
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/knowledge-center" target="_blank">
-                                            Knowledge Center
+                                        <a class="nav-link" href="http://192.168.100.9/issue/" target="_blank">
+                                        Issue Tracker
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="https://services.creative-tim.com/?ref=ct-soft-ui-footer" target="_blank">
-                                            Custom Development
+                                        Knowledge Center
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://www.creative-tim.com/sponsorships" target="_blank">
-                                            Sponsorships
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -146,4 +130,4 @@
                         </div>
                     </div>
                 </div>
-            </footer>
+            </footer> -->

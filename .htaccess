@@ -3,3 +3,6 @@ RewriteEngine On
 
 # Quy tắc rewrite từ /requests/index/jp thành /requests/index.php?lang=jp
 RewriteRule ^requests/index/([a-zA-Z]{2})$ /requests/index.php?lang=$1 [L,QSA]
+
+# Nếu muốn loại bỏ đuôi .php trong URL, bạn có thể dùng quy tắc sau:
+RewriteRule ^requests/index$ /requests/index.php [L]

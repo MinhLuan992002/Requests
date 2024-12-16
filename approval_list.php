@@ -13,13 +13,18 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $manv = $_SESSION['manv'];  // Thay thế bằng mã nhân viên hiện tại
 
 // Gọi stored procedure
-$sql = $pdo->prepare("CALL requestsapp.GetRequestsByUserType(:manv)");
+// Gọi stored procedure
+$sql = $pdo->prepare("CALL requestsapp.GetRequests(:manv, :language_code)");
 
 // Gắn giá trị cho tham số đầu vào
 $sql->bindParam(':manv', $manv, PDO::PARAM_STR);
+$sql->bindParam(':language_code', $lang, PDO::PARAM_STR);
 
 // Thực thi câu lệnh
 $sql->execute();
+
+
+
 // Lấy kết quả trả về
 $requests = $sql->fetchAll(PDO::FETCH_ASSOC);
 try {
@@ -42,62 +47,60 @@ try {
     'department' =>  $_SESSION['department'],
     'manv' =>  $_SESSION['manv']
   ]);
-  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $delete = $stmt->fetch(PDO::FETCH_ASSOC);
 
- 
 
-  $stmt = $pdo->query("SELECT level_value, level_name FROM priority_levels WHERE isDeleted = 0 AND isActive = 1 ORDER BY level_value ASC");
-  $priorityLevels = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-  // Lấy bản dịch cho các danh mục từ bảng translations
-  foreach ($priorityLevels as &$priority) {
-      // Tạo key cho priority_name theo định dạng 'priority_camera', 'priority_user', ...
-      $key = 'priority_' . strtolower($priority['level_name']); // Đảm bảo key đúng với bảng translations
-  
 
-  
+  try {
+    // Lấy danh sách cấp độ ưu tiên từ cơ sở dữ liệu
+    $stmt = $pdo->query("SELECT level_value, level_name FROM priority_levels WHERE isDeleted = 0 AND isActive = 1 ORDER BY level_value ASC");
+    $priorityLevels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($priorityLevels as &$priority) {
+      // Tạo key cho level_name theo định dạng 'priority_camera', 'priority_user', ...
+      $key = 'priority_' . strtolower($priority['level_name']);
+
       // Lấy bản dịch từ bảng translations
-      $stmt = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
-      $stmt->execute([$key,$lang]);
-      $translation = $stmt->fetch(PDO::FETCH_ASSOC);
-      
+      $stmtTranslation = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
+      $stmtTranslation->execute([$key, $lang]); // $lang là mã ngôn ngữ hiện tại (vd: 'vi', 'ja', ...)
+      $translation = $stmtTranslation->fetch(PDO::FETCH_ASSOC);
 
-  
-      // Nếu có bản dịch, thay đổi giá trị level_name thành bản dịch, nếu không giữ nguyên giá trị gốc
-      if ($translation) {
-          $priority['level_name'] = $translation['value'];
-      }}
+      // Gắn thêm trường 'display_name' để chứa giá trị hiển thị (dịch hoặc gốc)
+      $priority['display_name'] = $translation['value'] ?? $priority['level_name'];
+    }
+  } catch (PDOException $e) {
+    echo "Lỗi khi kết nối cơ sở dữ liệu: " . $e->getMessage();
+    exit;
+  }
 
-  
-// Lấy danh mục từ bảng support_categories
-$stmt = $pdo->query("SELECT id, category_name FROM support_categories WHERE isDeleted = 0 AND isActive = 1");
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Debug: kiểm tra dữ liệu danh mục
-// echo '<pre>';
-// var_dump($categories);
-// echo '</pre>';
 
+
+
+  try {
+    // Lấy danh mục từ cơ sở dữ liệu
+    $stmt = $pdo->query("SELECT id, category_name FROM support_categories WHERE isDeleted = 0 AND isActive = 1");
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($categories as &$category) {
+      // Tạo key cho category_name theo định dạng 'category_camera', 'category_user', ...
+      $key = 'category_' . strtolower($category['category_name']);
+
+      // Lấy bản dịch từ bảng translations
+      $stmtTranslation = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
+      $stmtTranslation->execute([$key, $lang]); // $lang là mã ngôn ngữ hiện tại (vd: 'vi', 'ja', ...)
+      $translation = $stmtTranslation->fetch(PDO::FETCH_ASSOC);
+
+      // Gắn thêm trường 'display_name' để chứa giá trị hiển thị (dịch hoặc gốc)
+      $category['display_name'] = $translation['value'] ?? $category['category_name'];
+    }
+  } catch (PDOException $e) {
+    echo "Lỗi khi kết nối cơ sở dữ liệu: " . $e->getMessage();
+    exit;
+  }
 } catch (PDOException $e) {
   echo "Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage(); // Hiển thị lỗi nếu kết nối thất bại
-}
-
-
-foreach ($categories as &$category) {
-    // Tạo key cho category_name theo định dạng 'category_camera', 'category_user', ...
-    $key = 'category_' . strtolower($category['category_name']); // Đảm bảo key đúng với bảng translations
-
-
-    // Lấy bản dịch từ bảng translations
-    $stmt = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
-    $stmt->execute([$key,$lang]);
-    $translation = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-
-    // Nếu có bản dịch, thay đổi giá trị category_name thành bản dịch, nếu không giữ nguyên giá trị gốc
-    if ($translation) {
-        $category['category_name'] = $translation['value'];
-    }
 }
 
 
@@ -218,6 +221,7 @@ $pdo = null;
   </style>
 </head>
 
+<?php include './view/loading.php' ?>
 
 <body class="g-sidenav-show  bg-gray-100">
   <!-- <?php include './view/slidenav.php' ?> -->
@@ -300,7 +304,7 @@ $pdo = null;
 
                       <td>
                         <span class="text-xs font-weight-bold">
-                          <?= htmlspecialchars($request['approval_status']); ?>
+                          <?= htmlspecialchars($request['translated_status']); ?>
                         </span>
                       </td>
                       <td>
@@ -362,7 +366,8 @@ $pdo = null;
                                 window.location.href = url.toString(); // Reload trang với URL mới (sẽ có request_id trong URL)
                               }
                             </script>
-                            <?php if (in_array($result['ConfigName'], ['Admin', 'Superadmin'])): ?>
+                            <?php if ($delete['ConfigName'] == 'Admin' || $delete['ConfigName'] == 'Supperadmin'): ?>
+
                               <li>
                                 <a class="dropdown-item text-danger"
                                   href="delete_request.php?request_id=<?= $request['id']; ?>"
@@ -371,6 +376,8 @@ $pdo = null;
                                 </a>
                               </li>
                             <?php endif; ?>
+
+
                           </ul>
                         </div>
                       </td>

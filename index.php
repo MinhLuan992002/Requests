@@ -13,13 +13,18 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $manv = $_SESSION['manv'];  // Thay thế bằng mã nhân viên hiện tại
 
 // Gọi stored procedure
-$sql = $pdo->prepare("CALL requestsapp.GetRequestsByUserType(:manv)");
+// Gọi stored procedure
+$sql = $pdo->prepare("CALL requestsapp.GetRequests(:manv, :language_code)");
 
 // Gắn giá trị cho tham số đầu vào
 $sql->bindParam(':manv', $manv, PDO::PARAM_STR);
+$sql->bindParam(':language_code', $lang, PDO::PARAM_STR);
 
 // Thực thi câu lệnh
 $sql->execute();
+
+
+
 // Lấy kết quả trả về
 $requests = $sql->fetchAll(PDO::FETCH_ASSOC);
 try {
@@ -42,18 +47,64 @@ try {
     'department' =>  $_SESSION['department'],
     'manv' =>  $_SESSION['manv']
   ]);
-  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $delete = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-  $stmt = $pdo->query("SELECT id, category_name FROM support_categories WHERE isDeleted = 0 AND isActive = 1 ");
-  $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-  $stmt = $pdo->prepare("SELECT level_value, level_name FROM priority_levels WHERE isDeleted = 0 AND isActive = 1 ORDER BY level_value ASC");
-  $stmt->execute();
-  $priorityLevels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  try {
+    // Lấy danh sách cấp độ ưu tiên từ cơ sở dữ liệu
+    $stmt = $pdo->query("SELECT level_value, level_name FROM priority_levels WHERE isDeleted = 0 AND isActive = 1 ORDER BY level_value ASC");
+    $priorityLevels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($priorityLevels as &$priority) {
+      // Tạo key cho level_name theo định dạng 'priority_camera', 'priority_user', ...
+      $key = 'priority_' . strtolower($priority['level_name']);
+
+      // Lấy bản dịch từ bảng translations
+      $stmtTranslation = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
+      $stmtTranslation->execute([$key, $lang]); // $lang là mã ngôn ngữ hiện tại (vd: 'vi', 'ja', ...)
+      $translation = $stmtTranslation->fetch(PDO::FETCH_ASSOC);
+
+      // Gắn thêm trường 'display_name' để chứa giá trị hiển thị (dịch hoặc gốc)
+      $priority['display_name'] = $translation['value'] ?? $priority['level_name'];
+    }
+  } catch (PDOException $e) {
+    echo "Lỗi khi kết nối cơ sở dữ liệu: " . $e->getMessage();
+    exit;
+  }
+
+
+
+
+
+  try {
+    // Lấy danh mục từ cơ sở dữ liệu
+    $stmt = $pdo->query("SELECT id, category_name FROM support_categories WHERE isDeleted = 0 AND isActive = 1");
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($categories as &$category) {
+      // Tạo key cho category_name theo định dạng 'category_camera', 'category_user', ...
+      $key = 'category_' . strtolower($category['category_name']);
+
+      // Lấy bản dịch từ bảng translations
+      $stmtTranslation = $pdo->prepare("SELECT value FROM translations WHERE `key` = ? AND language_code = ?");
+      $stmtTranslation->execute([$key, $lang]); // $lang là mã ngôn ngữ hiện tại (vd: 'vi', 'ja', ...)
+      $translation = $stmtTranslation->fetch(PDO::FETCH_ASSOC);
+
+      // Gắn thêm trường 'display_name' để chứa giá trị hiển thị (dịch hoặc gốc)
+      $category['display_name'] = $translation['value'] ?? $category['category_name'];
+    }
+  } catch (PDOException $e) {
+    echo "Lỗi khi kết nối cơ sở dữ liệu: " . $e->getMessage();
+    exit;
+  }
 } catch (PDOException $e) {
   echo "Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage(); // Hiển thị lỗi nếu kết nối thất bại
 }
+
+
+
 // Đóng kết nối PDO
 $pdo = null;
 ?>
@@ -84,10 +135,11 @@ $pdo = null;
   <script src="./js/jquery-3.3.1.min.js"></script>
 
   <style>
-    body{
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: large;
     }
+
     #senderSignature {
       font-family: 'Brush Script MT', cursive;
       /* Phông chữ giống chữ ký */
@@ -169,6 +221,7 @@ $pdo = null;
   </style>
 </head>
 
+<?php include './view/loading.php' ?>
 
 <body class="g-sidenav-show  bg-gray-100">
   <!-- <?php include './view/slidenav.php' ?> -->
@@ -251,7 +304,7 @@ $pdo = null;
 
                       <td>
                         <span class="text-xs font-weight-bold">
-                          <?= htmlspecialchars($request['approval_status']); ?>
+                          <?= htmlspecialchars($request['translated_status']); ?>
                         </span>
                       </td>
                       <td>
@@ -279,18 +332,15 @@ $pdo = null;
                                 <i class="fa fa-eye text-xs"></i> <?= $translations['view'] ?>
                               </a>
                             </li>
-
                             <!-- Nút mở modal -->
                             <form id="requestForm" method="get" action="">
                               <input type="hidden" id="request_id_input" name="request_id" value="">
                             </form>
-
                             <script>
                               // Hàm kiểm tra và mở modal nếu có request_id trong URL
                               function checkAndOpenModal() {
                                 const urlParams = new URLSearchParams(window.location.search);
                                 const requestId = urlParams.get('request_id'); // Lấy request_id từ URL
-
                                 // Nếu có request_id trong URL, mở modal tương ứng
                                 if (requestId) {
                                   const modalTarget = document.querySelector(`#supportModal_Completed_${requestId}`);
@@ -300,7 +350,6 @@ $pdo = null;
                                   }
                                 }
                               }
-
                               // Khi trang được tải hoặc URL thay đổi (popstate), kiểm tra và mở modal
                               document.addEventListener('DOMContentLoaded', function() {
                                 checkAndOpenModal(); // Kiểm tra và mở modal khi trang được tải
@@ -310,7 +359,6 @@ $pdo = null;
                                   checkAndOpenModal();
                                 });
                               });
-
                               // Cập nhật URL với request_id và reload trang
                               function updateUrlWithRequestId(requestId) {
                                 const url = new URL(window.location.href);
@@ -318,12 +366,8 @@ $pdo = null;
                                 window.location.href = url.toString(); // Reload trang với URL mới (sẽ có request_id trong URL)
                               }
                             </script>
+                            <?php if ($delete['ConfigName'] == 'Admin' || $delete['ConfigName'] == 'Supperadmin'): ?>
 
-
-
-
-
-                            <?php if (in_array($result['ConfigName'], ['Admin', 'Superadmin'])): ?>
                               <li>
                                 <a class="dropdown-item text-danger"
                                   href="delete_request.php?request_id=<?= $request['id']; ?>"
@@ -337,7 +381,6 @@ $pdo = null;
                           </ul>
                         </div>
                       </td>
-
                     </tr>
                   <?php endforeach; ?>
                 </tbody>
@@ -390,7 +433,7 @@ $pdo = null;
             document.getElementById('email').value = data.email;
           } else {
             document.getElementById('dept').value = '';
-            document.getElementById('email').value = '';
+            document.getElementById('').value = '';
           }
         })
         .catch((error) => console.error('Error fetching employee info:', error));
@@ -402,12 +445,10 @@ $pdo = null;
   <script src="./admin/assets/js/core/bootstrap.min.js"></script>
   <script src="./admin/assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="./admin/assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
   <script src="./js/bootstrap.bundle.min.js"></script>
 
-  <!-- Github buttons -->
-  <!-- <script async defer src="https://buttons.github.io/buttons.js"></script> -->
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+
   <script src="./js/soft-ui-dashboard.min.js"></script>
 </body>
 

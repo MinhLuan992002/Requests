@@ -1,43 +1,199 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tùy chỉnh Choose File</title>
+    <title>Website Aggregator</title>
     <style>
-        /* Ẩn input mặc định */
-        .custom-file-input {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            overflow: hidden;
-            z-index: -1;
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f9;
+            color: #333;
         }
 
-        /* Tạo nút tùy chỉnh */
-        .custom-file-label {
-            display: inline-block;
-            background-color: #007bff;
+        header {
+            background-color: #004494;
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
             text-align: center;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .custom-file-label:hover {
-            background-color: #0056b3;
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366;
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffcc00;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Slideshow */
+        .slideshow {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .slideshow img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            animation: slide 12s infinite;
+        }
+
+        @keyframes slide {
+            0%, 33% { transform: translateX(0); }
+            34%, 66% { transform: translateX(-100%); }
+            67%, 100% { transform: translateX(-200%); }
+        }
+
+        .slideshow .caption {
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .grid-item {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .grid-item img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .grid-item h3 {
+            font-size: 1rem;
+            color: #004494;
+            margin: 0;
+        }
+
+        footer {
+            background-color: #004494;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <form action="upload.php" method="post" enctype="multipart/form-data">
-        <!-- Input file ẩn -->
-        <input type="file" id="fileInput" class="custom-file-input" name="file">
+    <!-- <header>
+        <h1>Website Aggregator</h1>
+        <p>Tổng hợp tất cả các trang web của bạn vào một nơi</p>
+    </header> -->
 
-        <!-- Nút tùy chỉnh -->
-        <label for="fileInput" class="custom-file-label">Chọn tệp</label>
-    </form>
+    <nav class="navbar">
+        <a href="#">Trang chủ</a>
+        <a href="#">Danh mục</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Giới thiệu</a>
+    </nav>
+
+    <div class="container">
+        <!-- Slideshow Section -->
+        <div class="slideshow">
+            <img src="https://via.placeholder.com/1200x300/004494/ffffff?text=Thông+báo+1" alt="Thông báo 1">
+            <div class="caption">Thông báo quan trọng</div>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid">
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/100" alt="Logo 1">
+                <h3>Trang 1</h3>
+            </div>
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/100" alt="Logo 2">
+                <h3>Trang 2</h3>
+            </div>
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/100" alt="Logo 3">
+                <h3>Trang 3</h3>
+            </div>
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/100" alt="Logo 4">
+                <h3>Trang 4</h3>
+            </div>
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/100" alt="Logo 5">
+                <h3>Trang 5</h3>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Website Aggregator. All rights reserved.</p>
+    </footer>
 </body>
 </html>

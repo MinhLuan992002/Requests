@@ -26,7 +26,8 @@ include 'set_language.php';
   <link href="./admin/assets/css/nucleo-svg.css" rel="stylesheet" />
   <link id="pagestyle" href="./admin/assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
   <!-- Bootstrap CSS -->
-
+   <link rel="stylesheet" href="./css/1/style.css">
+   <link rel="stylesheet" href="./css/1/responsive.css">
   <!-- Bootstrap JS (yêu cầu jQuery và Popper.js) -->
   <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
   <script src="./js/jquery-3.3.1.min.js"></script>
@@ -63,6 +64,7 @@ include 'set_language.php';
   }
 
   ?>
+  <?php include './view/loading.php' ?>
   <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
     <div class="container-fluid">
       <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="#">
@@ -227,6 +229,7 @@ include 'set_language.php';
       });
     });
   </script>
+<script src="./js/active.js"></script>
 </body>
 
 </html>

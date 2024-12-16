@@ -157,7 +157,7 @@ if (isset($_POST['request_id'])) {
 
         // $managerEmail = $request['manager_email']; // Email trưởng phòng (nếu có trường này trong bảng của bạn)
         // $directorEmail = $request['director_email']; // Email giám đốc (nếu có trường này trong bảng của bạn)
-        $managerEmail = 'minhluan@vnmatsuya.com';
+        $managerEmail = $email;
         $directorEmail = $Final['email'];
 
 
@@ -365,7 +365,7 @@ if (isset($_POST['request_id'])) {
                 </p>
             </div>
             ';
-            sendEmail($directorEmail, $subject, $body, $mail);
+            sendEmail($userEmail, $subject, $body, $mail);
         }
     } else {
         echo 'Không tìm thấy yêu cầu trong cơ sở dữ liệu.';

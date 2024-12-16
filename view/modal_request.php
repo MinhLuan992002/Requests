@@ -104,7 +104,7 @@
 
                 </div>
 
-              
+
             </div>
             <div>
                 <!-- Nội dung form không đổi -->
@@ -183,11 +183,17 @@
                                                                             name="priority_level"
                                                                             required>
                                                                             <option value="" selected><?= $translations['priority_level'] ?></option>
-                                                                            <?php foreach ($priorityLevels as &$priority): ?>
-                                                                                <option value="<?php echo htmlspecialchars($priority['level_name']); ?>">
-                                                                                    <?= htmlspecialchars($priority['level_name']) ?>
-                                                                                </option>
-                                                                            <?php endforeach; ?>
+                                                                            <?php if (!empty($priorityLevels)): ?>
+
+                                                                                <?php foreach ($priorityLevels as &$priority): ?>
+                                                                                    <option value="<?= htmlspecialchars($priority['level_name']) ?>"> <!-- Lưu giá trị gốc -->
+                                                                                        <?= htmlspecialchars($priority['display_name']) ?> <!-- Hiển thị bản dịch -->
+                                                                                    </option>
+                                                                                <?php endforeach; ?>
+                                                                            <?php else: ?>
+                                                                                <p>Không có dữ liệu cấp độ ưu tiên!</p>
+                                                                            <?php endif; ?>
+
                                                                         </select>
                                                                     </div>
 
@@ -238,9 +244,6 @@
                                                                         placeholder="<?= $translations['email'] ?>" />
                                                                 </div>
                                                             </div>
-
-
-
                                                             <!-- Nội dung yêu cầu -->
                                                             <h5 class="text-primary mb-3"><?= $translations['request_content'] ?></h5>
 
@@ -251,16 +254,18 @@
                                                                         <label for="category" class="form-label"><?= $translations['support_category'] ?></label>
                                                                         <select class="form-select" name="category[]" required onchange="updateSupportFields(this)">
                                                                             <option value="" selected><?= $translations['support_category'] ?? 'Danh mục hỗ trợ' ?></option>
-                                                                            <?php foreach ($categories as &$category): ?>
-                                                                                <option value="<?= htmlspecialchars($category['category_name']) ?>">
-                                                                                    <?= htmlspecialchars($category['category_name']) ?>
-                                                                                </option>
-                                                                            <?php endforeach; ?>
 
+                                                                            <?php if (!empty($categories)): ?>
+
+                                                                                <?php foreach ($categories as &$category): ?>
+                                                                                    <option value="<?= htmlspecialchars($category['category_name']) ?>"> <!-- Lưu giá trị gốc -->
+                                                                                        <?= htmlspecialchars($category['display_name']) ?> <!-- Hiển thị bản dịch -->
+                                                                                    </option>
+                                                                                <?php endforeach; ?>
+                                                                            <?php else: ?>
+                                                                                <p>Không có dữ liệu danh mục!</p>
+                                                                            <?php endif; ?>
                                                                         </select>
-
-
-
                                                                     </div>
                                                                     <div class="col-md-7 mb-3">
                                                                         <label for="supportContent" class="form-label"><?= $translations['support_details'] ?></label>
@@ -298,11 +303,17 @@
                     required
                     onchange="updateSupportFields(this)">
                     <option value="" selected><?= $translations['support_category'] ?></option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?= htmlspecialchars($category['id']) . '. ' . $category['category_name'] ?>">
-                            <?= htmlspecialchars($category['category_name']) ?>
-                        </option>
-                    <?php endforeach; ?>
+                    <?php if (!empty($categories)): ?>
+
+<?php foreach ($categories as &$category): ?>
+    <option value="<?= htmlspecialchars($category['category_name']) ?>"> <!-- Lưu giá trị gốc -->
+        <?= htmlspecialchars($category['display_name']) ?> <!-- Hiển thị bản dịch -->
+    </option>
+<?php endforeach; ?>
+<?php else: ?>
+<p>Không có dữ liệu danh mục!</p>
+<?php endif; ?>
+
                 </select>
             </div>
             <div class="col-md-7 mb-3">
@@ -353,13 +364,13 @@
                                                                                 case 'textarea':
                                                                                     content = `
                         <textarea class="form-control" name="content[]" rows="4" 
-                                  placeholder="${data.placeholder || 'Nhập nội dung chi tiết'}" required></textarea>
+                                  placeholder="<?= $translations['enter_content_details'] ?>" required></textarea>
                     `;
                                                                                     break;
                                                                                 case 'input':
                                                                                     content = `
                         <input type="text" class="form-control" name="content[]" 
-                               placeholder="${data.placeholder || 'Nhập nội dung chi tiết'}" required />
+                               placeholder="<?= $translations['enter_content_details'] ?>" required />
                     `;
                                                                                     break;
                                                                                 case 'select':
