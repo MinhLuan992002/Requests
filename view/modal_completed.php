@@ -246,8 +246,6 @@ if (isset($_GET['request_id'])) {
             
 
                                     </div>
-
-
                                     <?php
                                     $approval_status = $request['approval_status'] ?? ''; // Lấy trạng thái phê duyệt từ cơ sở dữ liệu
 
@@ -262,13 +260,7 @@ if (isset($_GET['request_id'])) {
                                     <?php endif; ?>
 
                                     <!-- Input ẩn để lưu trạng thái approval_status -->
-
-
-
-
-
                             </div>
-
                             <!-- Nút gửi -->
                             </form>
 

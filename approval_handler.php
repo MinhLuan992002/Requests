@@ -96,10 +96,8 @@ if (isset($_POST['request_id'])) {
             echo "Trạng thái phê duyệt không hợp lệ!";
             exit;
         }
-
         // Cập nhật trạng thái phê duyệt và manager_approval
         try {
-
             $stmt = $pdo->prepare("UPDATE support_requests 
                                    SET approval_status = :approval_status, 
                                        manager_approval = :manager_approval, 
@@ -127,7 +125,6 @@ if (isset($_POST['request_id'])) {
             error_log("Lỗi SQL: " . $e->getMessage());
         }
     }
-
     $approvalLink = "http://192.168.16.251:8009/requests/final_approver.php?request_id=" . urlencode($requestId);
     $details = "http://192.168.16.251:8009/requests/approval_list.php?lang=en";
     // Truy vấn lấy thông tin yêu cầu từ bảng support_requests

@@ -9,7 +9,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php'; // Nếu bạn sử dụng Composer
 $mail = new PHPMailer(true);
 // Hàm gửi email
-function sendEmail($to, $subject, $body, $mail)
+function sendEmail($to, $subject, $body, $mail, $cc = null)
 {
     try {
         // Cấu hình gửi mail
@@ -24,7 +24,20 @@ function sendEmail($to, $subject, $body, $mail)
         // Thiết lập thông tin người gửi và người nhận
         $mail->setFrom('it_support@vnmatsuya.com', 'Hệ Thống Hỗ Trợ');
         $mail->CharSet = 'UTF-8';
-        $mail->addAddress($to); // Người nhận email
+        $mail->addAddress($to); // Người nhận chính
+
+        // Thêm CC nếu có
+        if ($cc) {
+            if (is_array($cc)) {
+                // Nếu CC là một mảng, thêm từng email
+                foreach ($cc as $ccEmail) {
+                    $mail->addCC($ccEmail);
+                }
+            } else {
+                // Nếu CC là một chuỗi, thêm trực tiếp
+                $mail->addCC($cc);
+            }
+        }
 
         // Thiết lập nội dung email
         $mail->isHTML(true);
@@ -33,7 +46,6 @@ function sendEmail($to, $subject, $body, $mail)
 
         // Gửi email
         $mail->send();
-        // echo ('.');
         // echo "<script>
         //         showSuccessNotification('Email đã được gửi thành công!');
         //       </script>";
@@ -41,6 +53,7 @@ function sendEmail($to, $subject, $body, $mail)
         echo 'Email không gửi được. Lỗi: ' . $mail->ErrorInfo;
     }
 }
+
 
 // Kiểm tra nếu dữ liệu 'request_id' có trong POST không
 if (isset($_POST['request_id'])) {
@@ -76,6 +89,14 @@ if (isset($_POST['request_id'])) {
         echo "Không tìm thấy thông tin người dùng!";
         exit;
     }
+    $stmt = $pdo->prepare("SELECT u.email, u.fullname, ut.ConfigName
+                           FROM users u
+                           JOIN config ut ON u.UserType = ut.id
+                           WHERE u.department = :department and ConfigName='manager' AND u.IsActive = 1 AND u.IsDeleted = 0");
+    $stmt->bindParam(':department', $department, PDO::PARAM_STR);
+    $stmt->execute();
+    $manager = $stmt->fetch(PDO::FETCH_ASSOC);
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['approval_status'])) {
             $approval_status = $_POST['approval_status'];
@@ -135,7 +156,7 @@ if (isset($_POST['request_id'])) {
         $status = $request['approval_status']; // Trạng thái yêu cầu
         // $managerEmail = $request['manager_email']; // Email trưởng phòng (nếu có trường này trong bảng của bạn)
         // $it_sp = $request['director_email']; // Email giám đốc (nếu có trường này trong bảng của bạn)
-        $managerEmail = 'null';
+        $managerEmail = $manager;
         $it_sp = 'minhluan@vnmatsuya.com';
         // Xử lý trạng thái phê duyệt
         if ($status === 'Final Approved' && $managerEmail) {
@@ -397,7 +418,7 @@ if (isset($_POST['request_id'])) {
     }
 </style>
             ';
-            sendEmail($userEmail, $subject, $body, $mail);
+            sendEmail($userEmail, $subject, $body, $mail, $manager);
         }
     } else {
         echo 'Không tìm thấy yêu cầu trong cơ sở dữ liệu.';
